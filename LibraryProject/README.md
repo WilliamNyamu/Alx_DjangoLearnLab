@@ -1,1 +1,1 @@
-# Learning Django is becoming a fun for me
+# Learning django is becoming a fun for me
