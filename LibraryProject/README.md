@@ -1,0 +1,1 @@
+# Learning Django is becoming a fun for me
