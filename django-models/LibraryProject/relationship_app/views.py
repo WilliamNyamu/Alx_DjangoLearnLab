@@ -2,7 +2,8 @@ from .models import Library
 from django.http import request
 from django.shortcuts import render
 from .models import Author, Book, Librarian
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView
+from django.views.generic.detail import DetailView
 # Create your views here.
 
 def list_books(request):
