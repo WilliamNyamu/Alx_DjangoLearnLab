@@ -6,6 +6,7 @@ def queries():
     books_by_author = Book.objects.filter(author = author)
 
     # List all the books in a library
-    lib_name = Library.objects.get(name = "LibraryProject")
+    library_name = "LibraryProject"
+    lib_name = Library.objects.get(name = library_name)
     for book in lib_name.books.all():
         print(book)
