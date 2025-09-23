@@ -7,5 +7,6 @@ def queries():
 
     # List all the books in a library
     library_name = "LibraryProject"
-    Library.objects.get(name = library_name).books.all()
+    library = Library.objects.get(name=library_name)
+    books_in_library = library.books.all()
     
