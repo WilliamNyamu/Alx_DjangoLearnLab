@@ -13,5 +13,5 @@ def queries():
 
     # Retrieve the librarian for a library
     library_name = "LibraryProject"
-    librarian = Librarian.objects.get(library = library_name)
+    librarian = Librarian.objects.get(library=library_name)
     
