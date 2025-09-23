@@ -3,7 +3,7 @@ from .models import Author, Book, Library
 def queries():
     # Query all books by a specific author
     author_name = "Prof Kibugi"
-    author = Book.objects.get(author = author_name)
+    author = Author.objects.get(name = author_name)
     books_by_author = Book.objects.filter(author = author)
 
     # List all the books in a library
