@@ -5,4 +5,4 @@ from .models import Author, Book, Library, Librarian
 
 def list_books(request):
     books = Book.objects.all()
-    return render(request, 'relationship_app/list_books.txt', {'books': books})
+    return render(request, 'relationship_app/list_books.html', {'books': books})
