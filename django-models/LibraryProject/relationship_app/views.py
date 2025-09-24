@@ -1,6 +1,7 @@
 from .models import Library
 from django.contrib.auth import login, logout
-from django.contrib.auth.decorators import user_passes_test, permission_required
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import permission_required
 from django.http import request
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Author, Book, Librarian
