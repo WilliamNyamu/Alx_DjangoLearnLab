@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 # Create your models here.
 
@@ -33,5 +35,12 @@ class UserProfile(models.Model):
         'Librarian': 'Librarian',
         'Member': 'Member'
     }
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
+
+# Signals to ensure that the UserProfile is automatically created upon signup
+
+@receiver(post_save, sender = User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        User.objects.get_or_create(user=instance, role="Member")
