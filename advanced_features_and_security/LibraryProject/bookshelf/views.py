@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import render
 from django.contrib.auth.decorators import permission_required
 from relationship_app.models import Book
+from .forms import ExampleForm
 
 # Create your views here.
 @permission_required('relationship_app.can_view', raise_exception=True)
