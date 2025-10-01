@@ -4,15 +4,15 @@ from .serializers import BookSerializer, AuthorSerializer
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView
 # Create your views here.
 
-class BookListAPIView(ListAPIView):
+class ListView(ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
-class BookDetailAPIView(RetrieveAPIView):
+class DetailView(RetrieveAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
-class BookCreateAPIView(CreateAPIView):
+class CreateView(CreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
