@@ -1,0 +1,8 @@
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from . import views
+
+urlpatterns = [
+    path("books", views.ListView.as_view()),
+    path("book/<int:pk>/", views.DetailView.as_view()),
+]
