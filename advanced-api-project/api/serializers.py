@@ -2,9 +2,11 @@ from rest_framework import serializers
 from .models import Author, Book
 
 class BookSerializer(serializers.ModelSerializer):
+    author_name = serializers.CharField(source="author.name", read_only=True)
+    
     class Meta:
         model = Book
-        fields = ['id', 'title', 'publication_year', 'author']
+        fields = ['id', 'title', 'publication_year', 'author', 'author_name' ]
     
     def validate(self, data):
         from datetime import datetime
