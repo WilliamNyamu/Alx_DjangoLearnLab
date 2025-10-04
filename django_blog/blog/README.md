@@ -18,5 +18,11 @@ Auth setup:
 
 Profile Management
 - Added the LOGIN_URL = "/blogs/profile/" to show the page that unauthenticated users will be directed to if they try to access a @login_required pages
-- 
+- Created a Profile model with user(OnetoOne field with the User Model) - this ensure thats one user has one corresponding profile instance. Also added phone number, bio and profile_photo.
+- In forms.py created, UserInfoForm and ProfileInfoForm, to handle profile.
+- Created the profile view, incorporating both forms as per the request.method. 
+- Installed pillow and added media files in settings.py to handle profile_photo uploads.
+- In urls.py(project-level), if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+    for serving user uploads in development
 

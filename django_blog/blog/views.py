@@ -41,20 +41,27 @@ def logout_view(request):
     return render(request, 'blog/logout.html')
 
 
-@login_required
+@login_required # Ensure only logged in user is accessing this view
 def profile(request):
     if request.method == "POST":
+        # Bind the submitted POST data (and files) to the forms
+        # UserInfoForm edits the built-in User model
         u_form = UserInfoForm(request.POST, instance=request.user)
-        p_form = ProfileInfoForm(request.POST, request.FILES, instance=request.user)
+
+        # ProfileInFoForm edits the custom Profile model
+        # request.FILES is needed to handle image/file uploads
+        p_form = ProfileInfoForm(request.POST, request.FILES, instance=request.user.profile)
 
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
             return redirect('profile')
     else:
+        # If it's a GET request, pre-fill forms with the current user data
         u_form = UserInfoForm(instance=request.user)
         p_form = ProfileInfoForm(instance=request.user.profile)
     
+    # Pass both forms into the template for rendering
     context = {
         'u_form': u_form,
         'p_form': p_form
