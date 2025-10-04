@@ -1,0 +1,41 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %} User Profile {% endblock %}
+{% block styles %} 
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-card">
+    <div class="profile-header">
+        <img src="profile.jpg" alt="User Profile Picture" class="profile-img">
+        <h1 class="user-name">John Doe</h1>
+        <p class="user-title">Software Developer</p>
+    </div>
+
+    <div class="profile-body">
+        <h2>About Me</h2>
+        <p>
+            Passionate developer with experience in web and mobile application 
+            development. Enjoys working on open-source projects and mentoring beginners.
+        </p>
+
+        <h2>Contact Information</h2>
+        <ul>
+            <li><strong>Email:</strong> john.doe@example.com</li>
+            <li><strong>Phone:</strong> +1 234 567 890</li>
+            <li><strong>Location:</strong> Nairobi, Kenya</li>
+        </ul>
+
+        <h2>Skills</h2>
+        <div class="skills">
+            <span>HTML</span>
+            <span>CSS</span>
+            <span>JavaScript</span>
+            <span>Python</span>
+            <span>Django</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

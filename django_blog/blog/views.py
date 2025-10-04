@@ -7,11 +7,11 @@ from .forms import CustomUserCreationForm
 # Create your views here.
 
 def index(request):
-    return HttpResponse("<h4>Index Sanity Checks</h4>")
+    return render(request, 'blog/profile.html')
 
 def register(request):
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
@@ -19,7 +19,7 @@ def register(request):
         else:
             return render(request, 'blog/register.html', {'form': form})
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     return render(request, 'blog/register.html', {'form': form})
 
 def login_view(request):
