@@ -133,3 +133,13 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = "profile"
+LOGIN_URL = "/blogs/login/" # where unauthenticated users will be redirected to if they try to access a @login_required view
+
+# media settings (for profile pictures)
+MEDIA_URL = '/media/' # the URL prefix for media files
+MEDIA_ROOT = BASE_DIR / 'media' # the actual filesystem path where media files are stored.
+
+# If a user uploads profile_photos/john.jpg, it will be saved at:
+# BASE_DIR/media/profile_photos/john.jpg

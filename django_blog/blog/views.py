@@ -3,7 +3,9 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, UserInfoForm, ProfileInfoForm
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 
 def index(request):
@@ -38,9 +40,27 @@ def logout_view(request):
     logout(request)
     return render(request, 'blog/logout.html')
 
+
+@login_required
 def profile(request):
-    return render(request, 'blog/profile.html')
+    if request.method == "POST":
+        u_form = UserInfoForm(request.POST, instance=request.user)
+        p_form = ProfileInfoForm(request.POST, request.FILES, instance=request.user)
+
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            return redirect('profile')
+    else:
+        u_form = UserInfoForm(instance=request.user)
+        p_form = ProfileInfoForm(instance=request.user.profile)
     
+    context = {
+        'u_form': u_form,
+        'p_form': p_form
+    }
+
+    return render(request, 'blog/profile.html', context)
 
             
 

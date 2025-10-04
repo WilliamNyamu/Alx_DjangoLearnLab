@@ -16,5 +16,7 @@ Auth setup:
         - Tested and worked
 ✅ Successfully tested Auth by registering Waridi and Login her in using the same auth credentials
 
-
+Profile Management
+- Added the LOGIN_URL = "/blogs/profile/" to show the page that unauthenticated users will be directed to if they try to access a @login_required pages
+- 
 
