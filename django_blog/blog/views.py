@@ -7,7 +7,7 @@ from .forms import CustomUserCreationForm
 # Create your views here.
 
 def index(request):
-    return render(request, 'blog/profile.html')
+    return render(request, 'blog/home.html')
 
 def register(request):
     if request.method == "POST":
@@ -15,7 +15,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            return redirect('index')
+            return redirect('profile')
         else:
             return render(request, 'blog/register.html', {'form': form})
     else:
@@ -29,7 +29,7 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('index')
+            return redirect('profile')
     else:
         form = AuthenticationForm()
     return render(request, 'blog/login.html', {'form': form})
@@ -37,5 +37,10 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return render(request, 'blog/logout.html')
+
+def profile(request):
+    return render(request, 'blog/profile.html')
+    
+
             
 

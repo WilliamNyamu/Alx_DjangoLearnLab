@@ -1,0 +1,23 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block title %} Welcome Page {% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'home.css' % }">
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h1>Welcome!</h1>
+    <p>Please choose an option to continue:</p>
+    <div class="btn-group">
+        <button id="loginBtn">
+            <a href="{%url 'login'%}">Login </a>
+        </button>
+        <button id="registerBtn">
+            <a href="{%url 'register'%}">Register</a>
+        </button>
+    </div>
+</div>
+{% block extrajs %}
+    <script src="{% static 'script.js' %}"></script>
+{% endblock %}
+{% endblock %}
