@@ -203,3 +203,22 @@ class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateV
     def get_success_url(self):
         """Redirect back to the post detail page after editing the comment"""
         return reverse_lazy('post-detail', kwargs={'pk': self.object.post.pk})
+    
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+    model = Comment
+    template_name = "blog/comment_confirm_delete.html"
+    pk_url_kwarg = "comment_pk"  # matches <int:comment_pk> in urls.py
+
+    def get_success_url(self):
+        # Store post id before the comment is deleted
+        post_id = self.object.post.pk
+        return reverse_lazy('post-detail', kwargs={'pk': post_id})
+
+    def test_func(self):
+        """Ensure only the author (or staff) can delete the comment."""
+        comment = self.get_object()
+        return self.request.user == comment.author or self.request.user.is_staff
+    
+    def handle_no_permission(self):
+        messages.error(self.request, "You have no permission to access this!")
+        return redirect('posts')
