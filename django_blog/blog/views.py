@@ -160,8 +160,9 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView
         return self.request.user == post.author or self.request.user.is_staff
     
     def handle_no_permission(self):
-        messages.error(self.request, "Only the author or an admin staff can delete this post")
+        messages.error(self.request, "Only the author or an admin staff can delete this post.")
         return redirect('posts')
+
 
 class CommentCreateView(LoginRequiredMixin, generic.CreateView):
     model = Comment
