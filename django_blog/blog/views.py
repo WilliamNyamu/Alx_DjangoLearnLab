@@ -3,13 +3,14 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .forms import CustomUserCreationForm, UserInfoForm, ProfileInfoForm, PostCreateForm, CommentForm
+from .forms import CustomUserCreationForm, UserInfoForm, ProfileInfoForm, PostCreateForm, TagForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.views import generic
-from .models import Post, Comment
+from .models import Post, Comment, Tag
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.urls import reverse_lazy, reverse
+from django.db.models import Q
 # Create your views here.
 
 def index(request):
@@ -222,3 +223,32 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteV
     def handle_no_permission(self):
         messages.error(self.request, "You have no permission to access this!")
         return redirect('posts')
+
+# Tag view: show posts for a tag
+class PostsByTagView(generic.ListView):
+    model = Post
+    template_name = 'blog/posts_by_tag.html'
+    context_object_name = 'posts'
+    paginate_by = 10
+
+    def get_queryset(self):
+        tag_name = self.kwargs.get('tag_name')
+        return Post.objects.filter(tags__name__iexact=tag_name).distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag_name'] = self.kwargs.get('tag_name')
+        return context
+
+# Search view: search title, content, tags
+def search_view(request):
+    query = request.GET.get('q', '').strip()
+    results = Post.objects.none()
+    if query:
+        # Search title, content and tags
+        results = Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+    return render(request, 'blog/search_results.html', {'query': query, 'posts': results})

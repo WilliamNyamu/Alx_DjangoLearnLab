@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Profile, Post, Comment
+from .models import Profile, Post, Comment, Tag
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
@@ -83,4 +83,43 @@ class CommentForm(forms.ModelForm):
                 'placeholder': "Post a comment ..."
             })
         }
-        
+
+class TagForm(forms.ModelForm):
+    # A simple textarea or text input where users enter tags separated by commas
+    tags = forms.CharField(
+        required=False,
+        help_text="Comma-separated tags (e.g. django, python, tutorial)",
+        widget=forms.TextInput(attrs={'placeholder': 'tag1, tag2, tag3'})
+    )
+
+    class Meta:
+        model = Post
+        fields = ['title', 'content', 'tags']
+        # add other fields if needed (image, etc.)
+
+    def __init__(self, *args, **kwargs):
+        # If instance provided (update view), prefill tags field from instance tags
+        instance = kwargs.get('instance', None)
+        super().__init__(*args, **kwargs)
+        if instance:
+            self.fields['tags'].initial = ', '.join([t.name for t in instance.tags.all()])
+
+    def save(self, commit=True):
+        # Save the Post object first, then handle tags
+        post = super().save(commit=commit)
+        tag_string = self.cleaned_data.get('tags', '')
+        # parse tag string: split by comma, strip whitespace, ignore empties
+        tag_names = [t.strip() for t in tag_string.split(',') if t.strip()]
+        # Get or create Tag objects, then set m2m
+        tags = []
+        for name in tag_names:
+            tag_obj, created = Tag.objects.get_or_create(name__iexact=name, defaults={'name': name})
+            # Note: using get_or_create with case-insensitive check requires custom handling:
+            # above we try name__iexact in get_or_create to avoid case duplicates. If DB backend
+            # does not allow name__iexact in get_or_create, fallback to:
+            # tag_obj, created = Tag.objects.get_or_create(name=name)
+            tags.append(tag_obj)
+        # Assign tags to the post
+        post.tags.set(tags)
+        # If commit=False was used, tags assignment will still work after the instance is saved.
+        return post

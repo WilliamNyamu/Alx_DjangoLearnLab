@@ -1,0 +1,15 @@
+<!-- blog/templates/blog/search_results.html -->
+{% extends "blog/base.html" %}
+{% block content %}
+  <h2>Search results for "{{ query }}"</h2>
+  {% if posts %}
+    {% for post in posts %}
+      <article>
+        <h3><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h3>
+        <p>{{ post.content|truncatewords:30 }}</p>
+      </article>
+    {% endfor %}
+  {% else %}
+    <p>No posts found.</p>
+  {% endif %}
+{% endblock %}

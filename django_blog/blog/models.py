@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.urls import reverse
 
 # Create your models here.
 class Post(models.Model):
@@ -45,3 +46,15 @@ class Comment(models.Model):
     def __str__(self):
         return f"{self.author.username}'s comment"
     
+
+class Tag(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('posts-by-tag', kwargs={'tag_name': self.name})
