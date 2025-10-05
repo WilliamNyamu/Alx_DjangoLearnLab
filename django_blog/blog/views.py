@@ -224,31 +224,36 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteV
         messages.error(self.request, "You have no permission to access this!")
         return redirect('posts')
 
-# Tag view: show posts for a tag
-class PostsByTagView(generic.ListView):
+class TagPostListView(generic.ListView):
     model = Post
-    template_name = 'blog/posts_by_tag.html'
+    template_name = 'blog/post_list_by_tag.html'
     context_object_name = 'posts'
     paginate_by = 10
 
     def get_queryset(self):
         tag_name = self.kwargs.get('tag_name')
-        return Post.objects.filter(tags__name__iexact=tag_name).distinct()
+        return Post.objects.filter(tags__name__iexact=tag_name).order_by('-published_date')
+
+def search_view(request):
+    q = request.GET.get('q', '').strip()
+    posts = Post.objects.none()
+    if q:
+        posts = Post.objects.filter(
+            Q(title__icontains=q) | Q(content__icontains=q) | Q(tags__name__icontains=q)
+        ).distinct().order_by('-published_date')
+    return render(request, 'blog/search_results.html', {'query': q, 'posts': posts})
+
+class PostByTagListView(generic.ListView):
+    model = Post
+    template_name = 'blog/post_list.html'  # you can reuse the same list template
+    context_object_name = 'posts'
+    paginate_by = 10
+
+    def get_queryset(self):
+        tag_slug = self.kwargs.get('tag_slug')
+        return Post.objects.filter(tags__slug=tag_slug).order_by('-published_date')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tag_name'] = self.kwargs.get('tag_name')
+        context["tag_slug"] = self.kwargs.get("tag_slug")
         return context
-
-# Search view: search title, content, tags
-def search_view(request):
-    query = request.GET.get('q', '').strip()
-    results = Post.objects.none()
-    if query:
-        # Search title, content and tags
-        results = Post.objects.filter(
-            Q(title__icontains=query) |
-            Q(content__icontains=query) |
-            Q(tags__name__icontains=query)
-        ).distinct()
-    return render(request, 'blog/search_results.html', {'query': query, 'posts': results})
