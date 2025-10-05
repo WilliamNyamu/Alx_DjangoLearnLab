@@ -3,11 +3,13 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .forms import CustomUserCreationForm, UserInfoForm, ProfileInfoForm
+from .forms import CustomUserCreationForm, UserInfoForm, ProfileInfoForm, PostCreateForm
 from django.contrib.auth.decorators import login_required
 from django.views import generic
 from .models import Post
-
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib import messages
+from django.urls import reverse_lazy, reverse
 # Create your views here.
 
 def index(request):
@@ -52,6 +54,7 @@ def profile(request):
 
         # ProfileInFoForm edits the custom Profile model
         # request.FILES is needed to handle image/file uploads
+        # instance is required to populate the profile of the currently authenticated user
         p_form = ProfileInfoForm(request.POST, request.FILES, instance=request.user.profile)
 
         if u_form.is_valid() and p_form.is_valid():
@@ -78,3 +81,62 @@ class PostsView(generic.ListView):
     template_name = "blog/blog.html"
     context_object_name = 'posts'
 
+class PostDetailView(generic.DetailView):
+    queryset = Post.objects.all()
+    template_name = "blog/blog_detail.html"
+    context_object_name = "post"
+
+class PostCreateView(LoginRequiredMixin, generic.CreateView):
+    form_class = PostCreateForm
+    template_name = 'blog/blog_create.html'
+    login_url = '/login/'
+    success_url = reverse_lazy('posts')
+    
+
+    def form_valid(self, form):
+        """Ensure the author is the currently authenticated user"""
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        """Render a message when form has errors """
+        messages.error(self.request, "Please correct the errors below.")
+        return super().form_invalid(form)
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+    model = Post
+    form_class = PostCreateForm
+    template_name = 'blog/blog_edit.html'
+    success_url = reverse_lazy('posts')
+
+    def test_func(self):
+        """
+        This method is needed by the UserPassesTestMixin
+        Allow only the author to edit their own post
+        """
+        post = self.get_object() # Retrieves the current post being edited
+        return self.request.user == post.author 
+    
+    # If the currently authenticated user is the author, it returns True, if not, false
+    # By default, if false, django will populate a 403 Forbidden error, unless overridden by handle_no_permission method
+
+    def handle_no_permission(self):
+        """Custom message when no permission(if test_func returns false)"""
+        messages.error(self.request, "You can only edit your own articles")
+        return redirect('posts')
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+    model = Post
+    template_name = "blog/blog_delete.html"
+    success_url = reverse_lazy('posts')
+    context_object_name = 'post'
+
+    def test_func(self):
+        """Only author or is_staff can delete the post"""
+        post = self.get_object()
+        return self.request.user == post.author or self.request.user.is_staff
+    
+    def handle_no_permission(self):
+        messages.error(self.request, "Only the author or an admin staff can delete this post")
+        return redirect('posts')
+    

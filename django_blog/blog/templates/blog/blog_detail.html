@@ -1,0 +1,44 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block title %}{{post.title}} {% endblock %}
+{% block styles %}
+  <link rel="stylesheet" href="{% static 'css/blog-detail.css' %}" />
+{% endblock %}
+{% block content %}
+<main class="container">
+<!-- Blog article -->
+    <article class="blog-post">
+        <h1 class="post-title">{{post.title}}</h1>
+        <div class="post-meta">
+        <span>By <strong>{{post.author.first_name}}</strong></span>
+        <span>•</span>
+        <time datetime="2025-09-30">{{post.published_date}}</time>
+        <span class="tags">Python • Django</span>
+        </div>
+
+        <img class="post-hero" src="{% static 'images/events.webp' %}" alt="Hero Image">
+
+        <div class="post-content">
+        {{post.content}}
+    </article>
+
+    <!-- Comments section -->
+    <section class="comments">
+        <h2>Comments (2)</h2>
+        <ul class="comment-list">
+        <li>
+            <p><strong>John:</strong> This was super helpful. Thanks for sharing!</p>
+        </li>
+        <li>
+            <p><strong>Mary:</strong> Can you also show how to add user authentication?</p>
+        </li>
+        </ul>
+
+        <form class="comment-form">
+        <label for="comment">Add a Comment</label>
+        <textarea id="comment" name="comment" rows="4" placeholder="Write your comment..."></textarea>
+        <button type="submit">Post Comment</button>
+        </form>
+    </section>
+</main>
+{% endblock %}

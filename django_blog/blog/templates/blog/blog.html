@@ -19,10 +19,10 @@
         <span class="tags">Python • Django</span>
         </div>
         <p class="post-excerpt">
-        Learn how to scaffold a blog app with Django: models, views, templates and file uploads — a concise step-by-step guide.
+        {{ post.content|truncatewords:25 }}
         </p>
         <div class="post-actions">
-        <a class="btn" style="border-color: black; color: black; border-width: 6px;" href="#">Read more</a>
+        <a class="btn" style="border-color: black; color: black; border-width: 6px;" href="{% url 'post-detail' post.pk %}">Read more</a>
         <a class="ghost" href="#">Share</a>
         </div>
     </div>
