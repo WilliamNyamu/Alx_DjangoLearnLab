@@ -47,57 +47,89 @@
   font-family: monospace;
 }
 
-/* Comments */
+/* Style the whole comments section */
 .comments {
-  margin-top: 40px;
-  background: var(--card);
-  padding: 24px;
-  border-radius: var(--radius);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.04);
-}
-.comments h2 {
-  margin-bottom: 16px;
-}
-.comment-list {
-  list-style: none;
-  margin-bottom: 20px;
-}
-.comment-list li {
-  margin-bottom: 12px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #e5e7eb;
-}
-.comment-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.comment-form textarea {
-  resize: vertical;
-  padding: 12px;
-  border: 1px solid #d1d5db;
-  border-radius: var(--radius);
-  font-family: inherit;
-}
-.comment-form button {
-  align-self: flex-end;
-  background: var(--accent);
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: var(--radius);
-  cursor: pointer;
-  font-weight: 500;
-}
-.comment-form button:hover {
-  background: #1e40af;
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #ddd;
 }
 
-/* Footer */
-.site-footer {
-  margin-top: 50px;
-  padding: 18px 0;
-  border-top: 1px solid #e5e7eb;
-  text-align: center;
-  color: var(--muted);
+/* Comments container */
+.comments {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+/* Title */
+.comments h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+    color: #222;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5rem;
+}
+
+/* Reset list */
+.comment-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Each comment box */
+.comment {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #e5e5e5;
+    transition: box-shadow 0.2s ease;
+}
+
+.comment:hover {
+    box-shadow: 0px 2px 6px rgba(0,0,0,0.08);
+}
+
+/* Author profile photo */
+.comment .author-pic {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #0077cc;
+}
+
+/* Author name + content container */
+.comment .author-info {
+    flex: 1;
+}
+
+/* Author name */
+.comment .author-name {
+    font-weight: 600;
+    color: #0077cc;
+    margin: 0;
+    margin-bottom: 0.2rem;
+}
+
+/* Comment text */
+.comment .comment-content {
+    margin: 0;
+    color: #444;
+    line-height: 1.5;
+}
+
+/* If no comments */
+.no-comments {
+    font-style: italic;
+    color: #888;
+    padding: 0.5rem;
 }

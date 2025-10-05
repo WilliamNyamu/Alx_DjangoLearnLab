@@ -27,14 +27,24 @@
         <h2>Comments</h2>
         <ul class="comment-list">
             {% for comment in comments %}
-            <li>
-                <p><strong>{{comment.author.first_name}}</strong> {{comment.content}}</p>
+            <li class="comment">
+                <div class="comment-author">
+                    <img style="border-bottom: 50%; width: 24px; height: 24px; object-fit: cover;" src="{{ comment.author.profile.profile_photo.url }}" alt="{{ comment.author.first_name }}" class="author-pic">
+                    <div class="author-info">
+                        <p class="author-name">{{ comment.author.first_name }}</p>
+                        <p class="comment-content">{{ comment.content }}</p>
+                    </div>
+                </div>
             </li>
             {% empty %}
-            <p> No comments yet! </p>
+            <p class="no-comments">No comments yet!</p>
             {% endfor %}
         </ul>
-
+        {% if form.instance.pk %}
+            <a href="{% url 'comment-update' post.pk %}">Edit your comment</a>
+        {% else %}
+            <a href="{% url 'comment-create' post.pk %}">Post a comment</a>
+        {% endif %}
     </section>
 </main>
 {% endblock %}

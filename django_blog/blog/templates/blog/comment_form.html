@@ -1,0 +1,18 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block title %} Blog Post {% endblock %}
+
+{% block content %}
+{% if form.instance.pk %}
+    <h1>Edit Comment</h1>
+{% else %}
+    <h1>Create New Comment</h1>
+{% endif %}
+<div>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+</div>
+{% endblock %}

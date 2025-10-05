@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .forms import CustomUserCreationForm, UserInfoForm, ProfileInfoForm, PostCreateForm
+from .forms import CustomUserCreationForm, UserInfoForm, ProfileInfoForm, PostCreateForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.views import generic
 from .models import Post, Comment
@@ -163,3 +163,42 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView
         messages.error(self.request, "Only the author or an admin staff can delete this post")
         return redirect('posts')
 
+class CommentCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = "blog/comment_form.html"
+    login_url = '/login/'
+
+    def form_valid(self, form):
+        """Ensure the comment author is the currently authenticated user"""
+        form.instance.author = self.request.user
+        form.instance.post_id = self.kwargs['pk']
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        """Render a message when the form has errors"""
+        messages.error(self.request, "Correct the errors in the form")
+        return super().form_invalid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('post-detail', kwargs={'pk': self.object.post.pk})
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = "blog/comment_form.html"
+    context_object_name = "comment"
+    pk_url_kwarg = "comment_pk" # <-- THIS IS NEEDED BECAUSE OF THE <int:comment_pk> used in the urls.py
+
+    def test_func(self):
+        """Checks whether the person accessing this is the author themselves"""
+        comment = self.get_object() # You have to get the object being edited through this line
+        return self.request.user == comment.author
+    
+    def handle_no_permission(self):
+        messages.error(self.request, "Only the comment's author can edit it")
+        return super().handle_no_permission()
+    
+    def get_success_url(self):
+        """Redirect back to the post detail page after editing the comment"""
+        return reverse_lazy('post-detail', kwargs={'pk': self.object.post.pk})
