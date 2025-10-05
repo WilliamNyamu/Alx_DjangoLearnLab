@@ -78,17 +78,17 @@ def profile(request):
 # View for displaying all blog posts
 class PostsView(generic.ListView):
     queryset = Post.objects.all() # You put the queryset not the model
-    template_name = "blog/blog.html"
+    template_name = "blog/post_list.html"
     context_object_name = 'posts'
 
 class PostDetailView(generic.DetailView):
     queryset = Post.objects.all()
-    template_name = "blog/blog_detail.html"
+    template_name = "blog/post_detail.html"
     context_object_name = "post"
 
 class PostCreateView(LoginRequiredMixin, generic.CreateView):
     form_class = PostCreateForm
-    template_name = 'blog/blog_create.html'
+    template_name = 'blog/post_form.html'
     login_url = '/login/'
     success_url = reverse_lazy('posts')
     
@@ -106,7 +106,7 @@ class PostCreateView(LoginRequiredMixin, generic.CreateView):
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Post
     form_class = PostCreateForm
-    template_name = 'blog/blog_edit.html'
+    template_name = 'blog/post_form.html'
     success_url = reverse_lazy('posts')
 
     def test_func(self):
@@ -127,7 +127,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView
 
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
     model = Post
-    template_name = "blog/blog_delete.html"
+    template_name = "blog/post_confirm_delete.html"
     success_url = reverse_lazy('posts')
     context_object_name = 'post'
 
