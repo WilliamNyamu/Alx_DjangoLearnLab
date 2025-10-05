@@ -5,6 +5,8 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .forms import CustomUserCreationForm, UserInfoForm, ProfileInfoForm
 from django.contrib.auth.decorators import login_required
+from django.views import generic
+from .models import Post
 
 # Create your views here.
 
@@ -69,5 +71,10 @@ def profile(request):
 
     return render(request, 'blog/profile.html', context)
 
-            
+
+# View for displaying all blog posts
+class PostsView(generic.ListView):
+    queryset = Post.objects.all() # You put the queryset not the model
+    template_name = "blog/blog.html"
+    context_object_name = 'posts'
 

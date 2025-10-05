@@ -43,3 +43,122 @@ footer {
     background-color: #333;
     color: white;
 }
+
+/* Post Card */
+.post-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  display:flex;
+  flex-direction: column;
+  min-height: 220px;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.post-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 45px rgba(18,25,40,0.08);
+}
+.post-thumb {
+  width:100%;
+  height:160px;
+  object-fit:cover;
+  display:block;
+}
+.post-body {
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  flex:1;
+}
+.post-title {
+  font-size:1.05rem;
+  margin-bottom:4px;
+}
+.post-title a {
+  text-decoration:none;
+  color: #0f172a;
+}
+.post-meta {
+  font-size:0.85rem;
+  color: var(--muted);
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.post-excerpt {
+  color:#334155;
+  font-size:0.95rem;
+  margin-top:6px;
+  flex:1;
+}
+.tags {
+  background:#eef2ff;
+  color: #0f172a;
+  padding:4px 8px;
+  border-radius:999px;
+  font-size:0.78rem;
+}
+
+/* Buttons */
+.post-actions {
+  margin-top:8px;
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+.btn {
+  background: var(--accent);
+  color:white;
+  padding:8px 12px;
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:600;
+}
+.ghost {
+  background:transparent;
+  border:1px solid #e6e9ef;
+  padding:8px 12px;
+  color: var(--muted);
+  border-radius:8px;
+  text-decoration:none;
+}
+
+/* Pagination */
+.pagination {
+  margin-top: 28px;
+  display:flex;
+  justify-content:center;
+  gap:8px;
+}
+.page {
+  border: none;
+  background: white;
+  padding:8px 12px;
+  border-radius:8px;
+  box-shadow: 0 6px 12px rgba(12,15,20,0.04);
+  cursor: pointer;
+}
+.page:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Footer */
+.site-footer {
+  margin-top: 48px;
+  border-top: 1px solid #e6e9ef;
+  background: transparent;
+  padding: 18px 0;
+  text-align:center;
+  color: var(--muted);
+}
+
+/* Responsive tweaks */
+@media (max-width:640px){
+  .post-thumb { height:140px; }
+  .controls { flex-direction: column; align-items:stretch; gap:12px; }
+  .site-title { font-size: 1rem; }
+}

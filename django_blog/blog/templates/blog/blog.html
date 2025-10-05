@@ -1,0 +1,50 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block title %} All blogs {% endblock %}
+
+{% block content %}
+
+<section class="posts-grid" aria-live="polite">
+    <h3 style="margin-bottom: 7px;">All blogs</h3>
+    <!-- Example blog card; duplicate/replace for each blog -->
+    {% for post in posts %}
+    <article class="post-card">
+    <img class="post-thumb" src="{% static 'images/events.webp' %}" alt="Post thumbnail">
+    <div class="post-body">
+        <h2 class="post-title"><a href="#">{{post.title}}</a></h2>
+        <div class="post-meta">
+        <span>By <strong>{{post.author.first_name}}</strong></span>
+        <span>•</span>
+        <time datetime="2025-09-30">{{post.published_date}}</time>
+        <span class="tags">Python • Django</span>
+        </div>
+        <p class="post-excerpt">
+        Learn how to scaffold a blog app with Django: models, views, templates and file uploads — a concise step-by-step guide.
+        </p>
+        <div class="post-actions">
+        <a class="btn" style="border-color: black; color: black; border-width: 6px;" href="#">Read more</a>
+        <a class="ghost" href="#">Share</a>
+        </div>
+    </div>
+    </article>
+    {% empty %}
+    <p> No blog posts to render yet</p>
+    {% endfor %}
+    <!-- Add more .post-card elements here... -->
+</section>
+
+<nav class="pagination" aria-label="Pagination">
+    <button class="page prev" disabled>&laquo; Prev</button>
+    <button class="page">1</button>
+    <button class="page">2</button>
+    <button class="page">3</button>
+    <button class="page next">Next &raquo;</button>
+</nav>
+</main>
+
+<footer class="site-footer">
+<div class="container">
+    <p>© 2025 My Blog. All rights reserved.</p>
+</div>
+</footer>
+{% endblock %}
