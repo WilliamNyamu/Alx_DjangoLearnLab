@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .forms import CustomUserCreationForm, UserInfoForm, ProfileInfoForm, PostCreateForm
 from django.contrib.auth.decorators import login_required
 from django.views import generic
-from .models import Post
+from .models import Post, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.urls import reverse_lazy, reverse
@@ -86,6 +86,29 @@ class PostDetailView(generic.DetailView):
     template_name = "blog/post_detail.html"
     context_object_name = "post"
 
+    def get_context_data(self, **kwargs):
+        # Call the parent class (DetailView)'s get_context_data method.
+        # This will give us the default context dictionary that Django
+        # normally provides to the template.
+        # For a DetailView, that usually includes:
+        #   - "object": the specific post we're viewing
+        #   - "<model_name>": the same post, but under its model name (e.g., "post")
+        context = super().get_context_data(**kwargs)
+
+        # Now we want to add extra information to that context dictionary.
+        # self.object refers to the current Post object being displayed.
+        # Since we assume Post has a related_name 'comments' in Comment model,
+        # self.object.comments.all() fetches all the comments related to this post.
+        context['comments'] = self.object.comments.all()
+
+        # Finally, we return the updated context dictionary.
+        # This means our template will now have access to:
+        #   {{ object }}   -> the blog post
+        #   {{ post }}     -> same blog post
+        #   {{ comments }} -> all the comments for this post
+        return context
+
+
 class PostCreateView(LoginRequiredMixin, generic.CreateView):
     form_class = PostCreateForm
     template_name = 'blog/post_form.html'
@@ -139,4 +162,4 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView
     def handle_no_permission(self):
         messages.error(self.request, "Only the author or an admin staff can delete this post")
         return redirect('posts')
-    
+

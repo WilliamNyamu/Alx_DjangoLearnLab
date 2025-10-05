@@ -24,21 +24,17 @@
 
     <!-- Comments section -->
     <section class="comments">
-        <h2>Comments (2)</h2>
+        <h2>Comments</h2>
         <ul class="comment-list">
-        <li>
-            <p><strong>John:</strong> This was super helpful. Thanks for sharing!</p>
-        </li>
-        <li>
-            <p><strong>Mary:</strong> Can you also show how to add user authentication?</p>
-        </li>
+            {% for comment in comments %}
+            <li>
+                <p><strong>{{comment.author.first_name}}</strong> {{comment.content}}</p>
+            </li>
+            {% empty %}
+            <p> No comments yet! </p>
+            {% endfor %}
         </ul>
 
-        <form class="comment-form">
-        <label for="comment">Add a Comment</label>
-        <textarea id="comment" name="comment" rows="4" placeholder="Write your comment..."></textarea>
-        <button type="submit">Post Comment</button>
-        </form>
     </section>
 </main>
 {% endblock %}
