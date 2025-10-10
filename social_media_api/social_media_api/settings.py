@@ -126,3 +126,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Telling django to use the CustomUser as the User model for auth
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# media configuration
+MEDIA_URL = '/media/' # url prefix for the images
+MEDIA_ROOT = BASE_DIR / 'media' # the actual path where the media files will be stored
+
+# To enable Token Authentication
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
