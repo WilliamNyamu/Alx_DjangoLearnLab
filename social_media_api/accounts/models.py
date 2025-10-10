@@ -5,8 +5,8 @@ from django.contrib.auth.models import AbstractUser
 class CustomUser(AbstractUser):
     """ Adding other fields for the User model """
     bio = models.TextField(blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='profile_picture/', null=True)
-    followers = models.ManyToManyField(symmetrical=False)
+    profile_picture = models.ImageField(upload_to='profile_picture/',blank=True, null=True)
+    followers = models.ManyToManyField('self', symmetrical=False, blank=True)
 
 
 
