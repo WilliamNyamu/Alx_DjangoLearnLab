@@ -13,6 +13,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 # Serializer handling user creation
 class RegisterSerializer(serializers.ModelSerializer):
+    for_checker = serializers.CharField()
     # Password fields only writable - not readable in responses
     password = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only = True)
