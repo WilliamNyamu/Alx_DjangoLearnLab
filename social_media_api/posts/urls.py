@@ -1,7 +1,10 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'posts', views.PostView.as_view(), basename="posts")
 
 urlpatterns = [
-    path("posts/", views.PostListAPIView.as_view(), name="posts"),
-    path("comments/", views.CommentListAPIView.as_view(), name="comments")
+    path('', include(router.urls))
 ]
