@@ -13,7 +13,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 # Serializer handling user creation
 class RegisterSerializer(serializers.ModelSerializer):
-    for_checker = serializers.CharField()
+    # for_checker = serializers.CharField()
     # Password fields only writable - not readable in responses
     password = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only = True)
@@ -53,3 +53,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         """
         token, created = Token.objects.get_or_create(user=obj)
         return token.key
+
+# The response looks like:
+# {
+#     "id": 1,
+#     "username": "waridi",
+#     "email": "dianamaua@gmail.com",
+#     "token": "ac8f87f6f465439becc1ef9d45277e861972f5c7"
+# }

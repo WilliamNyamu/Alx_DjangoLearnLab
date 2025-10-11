@@ -10,9 +10,9 @@ from django.contrib.auth import authenticate
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView
 
 # Create your views here.
-    
+
 @api_view(['POST'])
-@permission_classes(['AllowAny'])
+@permission_classes([AllowAny]) # the permission classes should not be enclosed by single quotes.
 def login_view(request):
     username= request.data.get('username')
     password = request.data.get('password')
