@@ -14,3 +14,12 @@ class PostView(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """Attach the logged-in users as the author automatically."""
         serializer.save(author = self.request.user)
+
+class CommentView(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        """Attach the logged-in users as the author automatically."""
+        serializer.save(author=self.request.user)
