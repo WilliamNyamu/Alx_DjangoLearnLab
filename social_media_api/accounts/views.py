@@ -9,6 +9,9 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView
 from rest_framework.authentication import get_user_model
+from rest_framework import generics
+from rest_framework import permissions
+from rest_framework import views
 
 User = get_user_model()
 
@@ -119,4 +122,23 @@ def unfollow_user(request, user_id):
         },
         status=status.HTTP_200_OK
     )
-    
+
+# A simpler, class-based view on following and unfollowing using APIView and overriding the post method
+class FollowToggleView(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def post(self, request, user_id):
+        me = request.user
+        try:
+            other = CustomUser.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return Response({'detail':'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        if other == me:
+            return Response({'detail':'Cannot follow yourself'}, status=status.HTTP_400_BAD_REQUEST)
+        if other in me.following.all():
+            me.following.remove(other)
+            action = 'unfollowed'
+        else:
+            me.following.add(other)
+            # Notification.objects.create(recipient=other, actor=me, verb='followed you')
+            action = 'followed'
+        return Response({'status': action})
