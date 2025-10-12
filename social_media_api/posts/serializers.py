@@ -11,9 +11,10 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'author', 'content', 'created_at', 'updated_at']
     
 class CommentSerializer(serializers.ModelSerializer):
-    post = serializers.CharField(source='post.title')
-    author = serializers.CharField(source='author.username')
+    author = serializers.StringRelatedField() # In views.py the author is set to be the currently logged in user
     class Meta:
         model = Comment
-        fields = ['id', 'post', 'author', 'content']
+        fields = ['id', 'post', 'author', 'content', 'created_at', 'updated_at']
+        read_only_fields = ['author', 'created_at', 'updated_at']
+    
     

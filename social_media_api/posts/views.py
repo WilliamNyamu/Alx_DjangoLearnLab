@@ -23,3 +23,4 @@ class CommentView(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """Attach the logged-in users as the author automatically."""
         serializer.save(author=self.request.user)
+    
