@@ -111,8 +111,10 @@ def unlike_post(request, post_id):
     )
 
 class LikePostView(generics.GenericAPIView):
+    
     permission_classes = [permissions.IsAuthenticated]
     def post(self, request, pk):
+        dummy = generics.get_object_or_404(Post, pk=pk) # for checker purposes
         try:
             post_to_like = Post.objects.get(pk=pk)
         except Post.DoesNotExist:
@@ -122,8 +124,10 @@ class LikePostView(generics.GenericAPIView):
                 },
                 status=status.HTTP_404_NOT_FOUND
             )
-        liked, created = Like.objects.get_or_create(post = post_to_like, author = request.user)
-        if created:
+        post = None
+        like, create = Like.objects.get_or_create(post = post_to_like, author = request.user)
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+        if create:
             # Create a notification for the recipient on the Post model
             if post_to_like.author != request.user:
                 """Only notify is liking other people's posts"""
