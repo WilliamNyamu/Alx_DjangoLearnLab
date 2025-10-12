@@ -8,6 +8,8 @@ from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework import generics
+from notifications.models import Notification
 # Create your views here.
 
 class PostView(viewsets.ModelViewSet):
@@ -50,7 +52,8 @@ def like_post(request, post_id):
         )
     
     # Check whether the user had already liked this post, to avoid duplication
-    if Like.objects.filter(post= post_to_like, author=request.user):
+    # Use the .exists() to avoid loading all the objects to memory
+    if Like.objects.filter(post= post_to_like, author=request.user).exists():
         return Response (
             {
                 'error': 'You already liked this post'
@@ -60,6 +63,16 @@ def like_post(request, post_id):
 
     
     Like.objects.create(post=post_to_like, author=request.user)
+    # Create a notification for the post's owner
+    if post_to_like.author != request.user:
+        """Only notify if liking other people's posts"""
+        Notification.objects.create(
+            recipient = post_to_like.author, # The user who wrote the post
+            actor = request.user,
+            verb = "like",
+            target = post_to_like # Pass in the model instance instead of the model itself
+        )
+
     return Response(
         {'message': 'Liked post'},
         status=status.HTTP_201_CREATED
@@ -96,4 +109,40 @@ def unlike_post(request, post_id):
         },
         status=status.HTTP_200_OK
     )
-    
+
+class LikePostView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def post(self, request, pk):
+        try:
+            post_to_like = Post.objects.get(pk=pk)
+        except Post.DoesNotExist:
+            return Response (
+                {
+                    'error': 'Post not found'
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+        liked, created = Like.objects.get_or_create(post = post_to_like, author = request.user)
+        if created:
+            # Create a notification for the recipient on the Post model
+            if post_to_like.author != request.user:
+                """Only notify is liking other people's posts"""
+                Notification.objects.create(
+                    recipient = post_to_like.author, # the user who wrote the post
+                    actor = request.user,
+                    verb = "like",
+                    target = post_to_like # Pass in the model instance instead of the model itself
+                )
+
+            return Response(
+                {
+                    'message': 'You liked the post'
+                },
+                status=status.HTTP_201_CREATED
+            )
+        return Response(
+            {
+                'message': 'You already liked this post'
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
