@@ -32,5 +32,5 @@ class PostFeed(ListAPIView):
 
     def get_queryset(self):
         following_users = self.request.user.following.all()
-        queryset = Post.objects.filter(author__in = following_users).order_by('-created_at').select_related('author')
+        queryset = Post.objects.filter(author__in=following_users).order_by('-created_at').select_related('author')
         return queryset
