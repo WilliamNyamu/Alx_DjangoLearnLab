@@ -1,8 +1,8 @@
+from rest_framework import viewsets
 from django.shortcuts import render
 from .serializers import PostSerializer, CommentSerializer
 from .models import Post, Comment
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
-from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 # Create your views here.
 
